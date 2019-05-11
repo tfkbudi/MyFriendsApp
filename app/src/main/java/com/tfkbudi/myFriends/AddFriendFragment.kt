@@ -1,12 +1,12 @@
 package com.tfkbudi.myFriends
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.*
+import kotlinx.android.synthetic.main.add_friend_fragment.*
 
 /**
  * Created on : 11/05/19
@@ -27,6 +27,11 @@ class AddFriendFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        //event klik untuk berpindah ke halaman list friends
+        btnSimpan.setOnClickListener {
+            (activity as MainActivity).tampilMyFriendFragment()
+        }
     }
 
     override fun onDestroy() {

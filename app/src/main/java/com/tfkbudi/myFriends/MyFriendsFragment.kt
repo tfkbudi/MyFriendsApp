@@ -29,7 +29,10 @@ class MyFriendsFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        fabAdd.setOnClickListener {  }
+        //event klik untuk berpindah ke halaman form add fragment
+        fabAdd.setOnClickListener {
+            (activity as MainActivity).tampilAddFriendFragment()
+        }
     }
 
     override fun onDestroy() {
