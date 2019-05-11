@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">My Friends</string>
+
+    <string-array name="jenis_kelamin">
+        <item>Pilih Jenis Kelamin</item>
+        <item>Laki-laki</item>
+        <item>Perempuan</item>
+    </string-array>
+
+</resources>
