@@ -5,6 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.tfkbudi.myFriends.adapter.MyFriendAdapter
+import com.tfkbudi.myFriends.model.Friend
 import kotlinx.android.synthetic.*
 import kotlinx.android.synthetic.main.my_friend_fragment.*
 
@@ -15,6 +18,8 @@ import kotlinx.android.synthetic.main.my_friend_fragment.*
  */
 
 class MyFriendsFragment: Fragment() {
+
+    lateinit var listTeman: MutableList<Friend>
 
     companion object {
         fun newInstance(): MyFriendsFragment {
@@ -33,6 +38,27 @@ class MyFriendsFragment: Fragment() {
         fabAdd.setOnClickListener {
             (activity as MainActivity).tampilAddFriendFragment()
         }
+
+        initView()
+    }
+
+    private fun initView() {
+        simulasiDataTeman()
+        tampilTeman()
+    }
+
+    private fun simulasiDataTeman() {
+
+        listTeman = ArrayList()
+
+        listTeman.add(Friend("Muhammad", "Laki-laki", "ade@gmail.com", "085719004268", "Bandung"))
+        listTeman.add(Friend("Al Harits", "Laki-laki", "rifaldi@gmail.com", "081213416171", "Bandung"))
+
+    }
+
+    private fun tampilTeman() {
+        rvMyFriends.layoutManager = LinearLayoutManager(activity)
+        rvMyFriends.adapter = MyFriendAdapter(activity!!, listTeman)
     }
 
     override fun onDestroy() {
