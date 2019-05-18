@@ -1,10 +1,7 @@
 package com.tfkbudi.myFriends.database
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.tfkbudi.myFriends.model.Friend
 
 /**
@@ -20,4 +17,7 @@ interface MyFriendDao {
 
     @Query("SELECT * FROM Friend")
     fun getFriends(): LiveData<List<Friend>>
+
+    @Delete
+    fun deleteFriend(friend: Friend)
 }

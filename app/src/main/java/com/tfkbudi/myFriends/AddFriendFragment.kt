@@ -68,7 +68,7 @@ class AddFriendFragment: Fragment() {
         when {
             nama.isEmpty() -> edit_nama.error = "harap di isi"
             email.isEmpty() -> edit_email.error = "harap di isi"
-            alamat.isEmpty() -> edit_telp.error = "harap di isi"
+//            alamat.isEmpty() -> edit_telp.error = "harap di isi"
             telp.isEmpty() -> edit_telp.error = "harap di isi"
             gender.equals("Pilih Jenis Kelamin") -> showToast("gender harap di isi")
 

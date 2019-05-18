@@ -24,11 +24,10 @@
             android:layout_marginEnd="20dp"/>
 
     <EditText
-
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
-            android:text="Nama"
+            android:hint="Nama"
             android:ems="10"
             android:id="@+id/edit_nama"
             app:layout_constraintTop_toBottomOf="@+id/textView" android:layout_marginBottom="48dp"
@@ -39,7 +38,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
-            android:text="Email"
+            android:hint="Email"
             android:ems="10"
             android:id="@+id/edit_email"
             app:layout_constraintTop_toBottomOf="@+id/spinner" android:layout_marginBottom="32dp"
@@ -50,7 +49,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:inputType="number"
-            android:text="Telp"
+            android:hint="Telp"
             android:ems="10"
             android:id="@+id/edit_telp"
             app:layout_constraintTop_toBottomOf="@+id/edit_email" android:layout_marginBottom="22dp"
@@ -65,12 +64,13 @@
             app:layout_constraintTop_toBottomOf="@+id/edit_nama" android:layout_marginBottom="26dp"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toTopOf="@+id/edit_email"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="20dp" android:layout_marginEnd="20dp"/>
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"/>
     <EditText
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:inputType="textPersonName"
-            android:text="Alamat"
+            android:hint="Alamat"
             android:ems="10"
             android:id="@+id/edit_alamat"
             app:layout_constraintTop_toBottomOf="@+id/edit_telp"
@@ -78,13 +78,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/btnSimpan"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="20dp" android:layout_marginEnd="20dp"/>
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"/>
+
     <Button
             android:text="Simpan"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/btnSimpan"
-            app:layout_constraintTop_toBottomOf="@+id/edit_alamat"
             android:layout_marginBottom="114dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

@@ -14,6 +14,13 @@ import com.tfkbudi.myFriends.database.MyFriendDao
 import com.tfkbudi.myFriends.model.Friend
 import kotlinx.android.synthetic.*
 import kotlinx.android.synthetic.main.my_friend_fragment.*
+import android.content.DialogInterface
+import androidx.appcompat.app.AlertDialog
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+
+
 
 /**
  * Created on : 11/05/19
@@ -26,6 +33,8 @@ class MyFriendsFragment: Fragment() {
     lateinit var listTeman: MutableList<Friend>
     private var db: AppDatabase? = null
     private var myFriendDao: MyFriendDao? = null
+    //tambah
+    lateinit var adapter: MyFriendAdapter
 
     companion object {
         fun newInstance(): MyFriendsFragment {
@@ -45,6 +54,7 @@ class MyFriendsFragment: Fragment() {
             (activity as MainActivity).tampilAddFriendFragment()
         }
 
+        listTeman = ArrayList()
         initLocalDB()
         initView()
 
@@ -52,8 +62,8 @@ class MyFriendsFragment: Fragment() {
     }
 
     private fun initView() {
-        simulasiDataTeman()
-        tampilTeman()
+//        simulasiDataTeman()
+        initAdapter()
     }
 
     private fun initLocalDB() {
@@ -62,18 +72,25 @@ class MyFriendsFragment: Fragment() {
     }
 
     /** sample data teman */
-    private fun simulasiDataTeman() {
-
-        listTeman = ArrayList()
-
-//        listTeman.add(Friend("Muhammad", "Laki-laki", "ade@gmail.com", "085719004268", "Bandung"))
-//        listTeman.add(Friend("Al Harits", "Laki-laki", "rifaldi@gmail.com", "081213416171", "Bandung"))
-    }
+//    private fun simulasiDataTeman() {
+//
+//        listTeman = ArrayList()
+//
+////        listTeman.add(Friend("Muhammad", "Laki-laki", "ade@gmail.com", "085719004268", "Bandung"))
+////        listTeman.add(Friend("Al Harits", "Laki-laki", "rifaldi@gmail.com", "081213416171", "Bandung"))
+//    }
 
     /* init recylerview with adapter */
-    private fun tampilTeman() {
+    private fun initAdapter() {
+        adapter = MyFriendAdapter(activity!!, listTeman)
+        adapter.setMyFriendClickListener(object : MyFriendAdapter.MyFriendClickListener{
+            override fun onLongClick(friend: Friend, position:Int) {
+                confrimDialog(friend, position)
+            }
+        })
+
         rvMyFriends.layoutManager = LinearLayoutManager(activity)
-        rvMyFriends.adapter = MyFriendAdapter(activity!!, listTeman)
+        rvMyFriends.adapter = adapter
 
     }
 
@@ -81,16 +98,18 @@ class MyFriendsFragment: Fragment() {
      * get data teman dari database
      */
     private fun ambilDataTeman() {
-        listTeman = ArrayList()
         //ambil data teman menggunakan livedata
         myFriendDao?.getFriends()?.observe(this, Observer { r ->
-            listTeman = r.toMutableList()
+            //clear data teman sebelumnya
+            if(listTeman.isNotEmpty()) listTeman.clear()
+            //tambahkan data teman yg baru
+            listTeman.addAll(r)
             when {
                 //check jika listnya kosong
                 listTeman.size == 0 -> tampilToast("Belum ada data teman")
 
                 else -> {
-                    tampilTeman()
+                    adapter.notifyDataSetChanged()
                 }
 
             }
@@ -106,5 +125,24 @@ class MyFriendsFragment: Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         this.clearFindViewByIdCache()
+    }
+
+    private fun confrimDialog(friend: Friend, position: Int) {
+        AlertDialog.Builder(activity!!)
+            .setTitle("Delete ${friend.nama}")
+            .setMessage("Do you really want to delete ${friend.nama} ?")
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .setPositiveButton(android.R.string.yes,
+                DialogInterface.OnClickListener { dialog, whichButton ->
+                    deleteFriend(friend)
+                    adapter.notifyItemRemoved(position)
+                }).show()
+    }
+
+    //delete friend ke database
+    private fun deleteFriend(friend: Friend): Job {
+        return GlobalScope.launch {
+            myFriendDao?.deleteFriend(friend)
+        }
     }
 }
