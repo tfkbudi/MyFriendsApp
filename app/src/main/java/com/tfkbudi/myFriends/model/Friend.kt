@@ -10,11 +10,11 @@ import androidx.room.PrimaryKey
  */
 @Entity
 data class Friend(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int? = null,
     val nama: String,
     val kelamin: String,
     val email: String,
     val telp: String,
-    val alamat: String
+    val alamat: String,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int? = null
 )

@@ -61,27 +61,32 @@ class MyFriendsFragment: Fragment() {
         myFriendDao = db?.myFriendDao()
     }
 
+    /** sample data teman */
     private fun simulasiDataTeman() {
 
         listTeman = ArrayList()
 
 //        listTeman.add(Friend("Muhammad", "Laki-laki", "ade@gmail.com", "085719004268", "Bandung"))
 //        listTeman.add(Friend("Al Harits", "Laki-laki", "rifaldi@gmail.com", "081213416171", "Bandung"))
-
     }
 
+    /* init recylerview with adapter */
     private fun tampilTeman() {
         rvMyFriends.layoutManager = LinearLayoutManager(activity)
         rvMyFriends.adapter = MyFriendAdapter(activity!!, listTeman)
+
     }
 
+    /**
+     * get data teman dari database
+     */
     private fun ambilDataTeman() {
-
         listTeman = ArrayList()
-        myFriendDao?.getFriends()?.observe(this, Observer(function = fun(r: List<Friend>) {
+        //ambil data teman menggunakan livedata
+        myFriendDao?.getFriends()?.observe(this, Observer { r ->
             listTeman = r.toMutableList()
-
             when {
+                //check jika listnya kosong
                 listTeman.size == 0 -> tampilToast("Belum ada data teman")
 
                 else -> {
@@ -89,10 +94,11 @@ class MyFriendsFragment: Fragment() {
                 }
 
             }
-        }))
+        })
 
     }
 
+    //menampilkan toast
     private fun tampilToast(message: String) {
         Toast.makeText(activity!!, message, Toast.LENGTH_SHORT).show()
     }

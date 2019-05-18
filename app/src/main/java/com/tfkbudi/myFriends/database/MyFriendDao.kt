@@ -14,6 +14,7 @@ import com.tfkbudi.myFriends.model.Friend
  */
 @Dao
 interface MyFriendDao {
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addFriend(friend: Friend)
 
