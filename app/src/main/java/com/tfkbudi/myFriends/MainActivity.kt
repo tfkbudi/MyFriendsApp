@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
 
     //fungsi untuk berpindah fragment
     private fun gantiFragment(fragmentManager: FragmentManager,
-                              fragment:Fragment, frameId:Int){
+                              fragment: Fragment, frameId: Int) {
         val transaction =fragmentManager.beginTransaction()
         transaction.replace(frameId,fragment)
         transaction.commit()
@@ -30,8 +30,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     //untuk menampilkan halaman add friend
-    fun tampilAddFriendFragment(){
-        gantiFragment(supportFragmentManager,AddFriendFragment.newInstance(),
+    fun tampilAddFriendFragment(id: Int? = null) {
+        gantiFragment(supportFragmentManager,AddFriendFragment.newInstance(id),
             R.id.frameLayout)
     }
 }

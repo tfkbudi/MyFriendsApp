@@ -43,15 +43,15 @@ class MyFriendAdapter(private val context: Context, private val items: List<Frie
             containerView.txtFriendEmail.text = item.email
             containerView.txtFriendTelp.text = item.telp
             //tambah event long klik
-            containerView.container.setOnLongClickListener(object : View.OnLongClickListener{
-                override fun onLongClick(v: View?): Boolean {
-                    /**
-                     * ketika ada event klik, akan mengirim objek item(Friend) dan posisi objek tsb di list.
-                     */
-                    listener.onLongClick(item, position)
-                    return true
-                }
-            })
+            containerView.container.setOnLongClickListener {
+                /**
+                 * ketika ada event klik, akan mengirim objek item(Friend) dan posisi objek tsb di list.
+                 */
+                listener.onLongClick(item, position)
+                true
+            }
+
+            containerView.container.setOnClickListener { listener.onClick(item.id) }
         }
 
     }
@@ -59,5 +59,7 @@ class MyFriendAdapter(private val context: Context, private val items: List<Frie
     //interface untuk callback event
     interface MyFriendClickListener {
         fun onLongClick(friend: Friend, position: Int)
+
+        fun onClick(id: Int?)
     }
 }

@@ -1,6 +1,5 @@
 package com.tfkbudi.myFriends
 
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -28,11 +27,11 @@ import kotlinx.coroutines.launch
 
 class MyFriendsFragment: Fragment() {
 
-    lateinit var listTeman: MutableList<Friend>
+    private lateinit var listTeman: MutableList<Friend>
     private var db: AppDatabase? = null
     private var myFriendDao: MyFriendDao? = null
     //tambah
-    lateinit var adapter: MyFriendAdapter
+    private lateinit var adapter: MyFriendAdapter
 
     companion object {
         fun newInstance(): MyFriendsFragment {
@@ -84,8 +83,12 @@ class MyFriendsFragment: Fragment() {
     private fun initAdapter() {
         adapter = MyFriendAdapter(activity!!, listTeman)
         adapter.setMyFriendClickListener(object : MyFriendAdapter.MyFriendClickListener{
+            override fun onClick(id: Int?) {
+                openFriendById(id)
+            }
+
             override fun onLongClick(friend: Friend, position:Int) {
-                confrimDialog(friend, position)
+                confrimDeleteDialog(friend, position)
             }
         })
 
@@ -128,20 +131,25 @@ class MyFriendsFragment: Fragment() {
     }
 
     //tampilkan dialog konfirmasi delete
-    private fun confrimDialog(friend: Friend, position: Int) {
+    private fun confrimDeleteDialog(friend: Friend, position: Int) {
         AlertDialog.Builder(activity!!)
             .setTitle("Delete ${friend.nama}")
             .setMessage("Do you really want to delete ${friend.nama} ?")
             .setIcon(android.R.drawable.ic_dialog_alert)
-            .setPositiveButton(android.R.string.yes,
-                DialogInterface.OnClickListener { dialog, whichButton ->
-                    //jalankan method untuk menghapus data teman di database
-                    deleteFriend(friend)
-                    //method untuk memberi tahu adapter bahwa ada item yg di hapus di posisi tertentu
-                    adapter.notifyItemRemoved(position)
-                })
+            .setPositiveButton(android.R.string.yes) { dialog, whichButton ->
+                //jalankan method untuk menghapus data teman di database
+                deleteFriend(friend)
+                //method untuk memberi tahu adapter bahwa ada item yg di hapus di posisi tertentu
+                adapter.notifyItemRemoved(position)
+            }
             .setNegativeButton(android.R.string.no, null)
             .show()
+    }
+
+    private fun openFriendById(id: Int?) {
+        id?.let {
+            (activity as MainActivity).tampilAddFriendFragment(it)
+        }
     }
 
     //delete friend ke database
