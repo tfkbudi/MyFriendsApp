@@ -1,6 +1,7 @@
 package com.tfkbudi.myFriends
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,7 +45,7 @@ class AddFriendFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //event klik untuk berpindah ke halaman list friends
+        //event klik jika button simpan di klik user
         btnSimpan.setOnClickListener {
             validasi()
         }
@@ -52,6 +53,9 @@ class AddFriendFragment: Fragment() {
         initLocalDb()
     }
 
+    /**
+     * inisiasi database
+     */
     private fun initLocalDb() {
         db = AppDatabase.getAppDataBase(activity!!)
         myFriendDao = db?.myFriendDao()
@@ -68,7 +72,7 @@ class AddFriendFragment: Fragment() {
         when {
             nama.isEmpty() -> edit_nama.error = "harap di isi"
             email.isEmpty() -> edit_email.error = "harap di isi"
-//            alamat.isEmpty() -> edit_telp.error = "harap di isi"
+            alamat.isEmpty() -> edit_telp.error = "harap di isi"
             telp.isEmpty() -> edit_telp.error = "harap di isi"
             gender.equals("Pilih Jenis Kelamin") -> showToast("gender harap di isi")
 
@@ -77,7 +81,6 @@ class AddFriendFragment: Fragment() {
                 val friend = Friend(nama, gender, email, telp, alamat)
                 tambahDataTeman(friend)
             }
-
         }
     }
 
@@ -88,7 +91,6 @@ class AddFriendFragment: Fragment() {
             myFriendDao?.addFriend(friend)
             (activity as MainActivity).tampilMyFriendFragment()
         }
-
     }
 
     override fun onDestroy() {

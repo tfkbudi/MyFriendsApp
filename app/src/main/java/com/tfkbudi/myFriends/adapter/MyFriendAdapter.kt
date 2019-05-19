@@ -17,32 +17,37 @@ import kotlinx.android.synthetic.main.my_friends_item.view.*
  */
 class MyFriendAdapter(private val context: Context, private val items: List<Friend>) :
     RecyclerView.Adapter<MyFriendAdapter.ViewHolder>() {
-    //tambah
+    //inisiasi listener
     private lateinit var listener: MyFriendClickListener
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ViewHolder(LayoutInflater.from(context).inflate(R.layout.my_friends_item, parent, false))
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        //tambah adapter position
+        //passing item, listener dan adapter position (posisi list di recyclerview)
         holder.bindItem(items.get(position), listener, holder.adapterPosition)
     }
 
     override fun getItemCount(): Int = items.size
-    //tambah
+
+    //set value listener
     fun setMyFriendClickListener(listener: MyFriendClickListener) {
         this.listener = listener
     }
 
     class ViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer {
-        //tambah position
+
         fun bindItem(item: Friend, listener: MyFriendClickListener, position: Int) {
+            //set value ke textview di layout item recyclerview
             containerView.txtFriendName.text = item.nama
             containerView.txtFriendEmail.text = item.email
             containerView.txtFriendTelp.text = item.telp
             //tambah event long klik
             containerView.container.setOnLongClickListener(object : View.OnLongClickListener{
                 override fun onLongClick(v: View?): Boolean {
+                    /**
+                     * ketika ada event klik, akan mengirim objek item(Friend) dan posisi objek tsb di list.
+                     */
                     listener.onLongClick(item, position)
                     return true
                 }
@@ -50,7 +55,8 @@ class MyFriendAdapter(private val context: Context, private val items: List<Frie
         }
 
     }
-//tambah
+
+    //interface untuk callback event
     interface MyFriendClickListener {
         fun onLongClick(friend: Friend, position: Int)
     }

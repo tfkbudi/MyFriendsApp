@@ -1,10 +1,12 @@
 package com.tfkbudi.myFriends
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,13 +16,9 @@ import com.tfkbudi.myFriends.database.MyFriendDao
 import com.tfkbudi.myFriends.model.Friend
 import kotlinx.android.synthetic.*
 import kotlinx.android.synthetic.main.my_friend_fragment.*
-import android.content.DialogInterface
-import androidx.appcompat.app.AlertDialog
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-
-
 
 /**
  * Created on : 11/05/19
@@ -49,23 +47,25 @@ class MyFriendsFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //event klik untuk berpindah ke halaman form add fragment
-        fabAdd.setOnClickListener {
-            (activity as MainActivity).tampilAddFriendFragment()
-        }
-
         listTeman = ArrayList()
         initLocalDB()
         initView()
 
-        ambilDataTeman()
+        getDataFriends()
     }
 
     private fun initView() {
-//        simulasiDataTeman()
         initAdapter()
+
+        //event klik untuk berpindah ke halaman form add fragment
+        fabAdd.setOnClickListener {
+            (activity as MainActivity).tampilAddFriendFragment()
+        }
     }
 
+    /**
+     * fungsi untuk menginisiasi database/room
+     */
     private fun initLocalDB() {
         db = AppDatabase.getAppDataBase(activity!!)
         myFriendDao = db?.myFriendDao()
@@ -76,8 +76,8 @@ class MyFriendsFragment: Fragment() {
 //
 //        listTeman = ArrayList()
 //
-////        listTeman.add(Friend("Muhammad", "Laki-laki", "ade@gmail.com", "085719004268", "Bandung"))
-////        listTeman.add(Friend("Al Harits", "Laki-laki", "rifaldi@gmail.com", "081213416171", "Bandung"))
+//        listTeman.add(Friend("Muhammad", "Laki-laki", "ade@gmail.com", "085719004268", "Bandung"))
+//        listTeman.add(Friend("Al Harits", "Laki-laki", "rifaldi@gmail.com", "081213416171", "Bandung"))
 //    }
 
     /* init recylerview with adapter */
@@ -97,28 +97,28 @@ class MyFriendsFragment: Fragment() {
     /**
      * get data teman dari database
      */
-    private fun ambilDataTeman() {
+    private fun getDataFriends() {
         //ambil data teman menggunakan livedata
         myFriendDao?.getFriends()?.observe(this, Observer { r ->
-            //clear data teman sebelumnya
+            //clear data teman sebelumnya jika ada
             if(listTeman.isNotEmpty()) listTeman.clear()
-            //tambahkan data teman yg baru
+            //tambahkan data teman yg baru dr db ke listTeman
             listTeman.addAll(r)
             when {
-                //check jika listnya kosong
-                listTeman.size == 0 -> tampilToast("Belum ada data teman")
+                //check jika listnya kosong tampilkan sesuatu
+                listTeman.size == 0 -> showToast("Belum ada data teman")
 
                 else -> {
+                    //method untuk memberi tahu adapter bahwa data di perbaharui
                     adapter.notifyDataSetChanged()
                 }
 
             }
         })
-
     }
 
     //menampilkan toast
-    private fun tampilToast(message: String) {
+    private fun showToast(message: String) {
         Toast.makeText(activity!!, message, Toast.LENGTH_SHORT).show()
     }
 
@@ -127,6 +127,7 @@ class MyFriendsFragment: Fragment() {
         this.clearFindViewByIdCache()
     }
 
+    //tampilkan dialog konfirmasi delete
     private fun confrimDialog(friend: Friend, position: Int) {
         AlertDialog.Builder(activity!!)
             .setTitle("Delete ${friend.nama}")
@@ -134,9 +135,13 @@ class MyFriendsFragment: Fragment() {
             .setIcon(android.R.drawable.ic_dialog_alert)
             .setPositiveButton(android.R.string.yes,
                 DialogInterface.OnClickListener { dialog, whichButton ->
+                    //jalankan method untuk menghapus data teman di database
                     deleteFriend(friend)
+                    //method untuk memberi tahu adapter bahwa ada item yg di hapus di posisi tertentu
                     adapter.notifyItemRemoved(position)
-                }).show()
+                })
+            .setNegativeButton(android.R.string.no, null)
+            .show()
     }
 
     //delete friend ke database
