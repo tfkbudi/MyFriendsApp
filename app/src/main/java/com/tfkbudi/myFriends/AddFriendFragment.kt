@@ -98,7 +98,7 @@ class AddFriendFragment: Fragment() {
                 /**
                  * asumsi nya jika idFriend null maka proses selanjutnya adalah menyimpan
                  * data friend baru
-                 * tapi jika idFriend ada null maka proses selanjutnya adalah update data friend
+                 * tapi jika idFriend ada (tidak null) maka proses selanjutnya adalah update data friend
                  */
                 val friend = Friend(nama, gender, email, telp, alamat, idFriend)
                 if(idFriend == null) {
